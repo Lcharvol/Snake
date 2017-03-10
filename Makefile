@@ -13,7 +13,7 @@
 NAME = snake
 
 SRCS := srcs/main.c 
-SRCS += srcs/ft_hooks.c
+SRCS += srcs/ft_verif.c
 SRCS += srcs/ft_draw.c
 
 
