@@ -71,6 +71,7 @@ typedef struct		s_env
 	void			*img;
 }					t_env;
 
+void		ft_start_env(t_env *p);
 void		ft_choose_color(t_env *p);
 void		ft_draw_score(t_env *p);
 void		ft_game_over(t_env *p);

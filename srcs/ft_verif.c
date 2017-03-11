@@ -85,6 +85,12 @@ void		ft_verif_coli(t_env *p)
 		}
 		p->snake = p->snake->next;
 	}
+	if (tmp_y == p->snake->pos_y && tmp_x == p->snake->pos_x)
+	{
+		ft_game_over(p);
+		p->snake = tmp;
+		return ;
+	}
 	p->snake = tmp;
 }
 
@@ -107,30 +113,34 @@ int		ft_verif_bonus(int x, int y, t_env *p)
 
 void		ft_choose_color(t_env *p)
 {
-	if (p->level == 3)
+	int i;
+	int i2;
+	int i3;
+	int i4;
+
+	i = p->snake->id;
+	i2 = 0;
+	i3 = 0;
+	i4 = 0;
+	if ((i * 2) > 204)
 	{
-		p->r = 100;
-		p->v = 5 * p->snake->id;
-		p->b = 131;
+		i2 += ((2 * i) - 204);
+		i = 102;
 	}
-	if (p->level == 4)
+	if (i2 > 142)
 	{
-		p->r = 200;
-		p->v = 5 * p->snake->id;
-		p->b = 50 + (10 * p->snake->id);
+		i3 += (i2 - 142);
+		i2 = 142;
 	}
-	if (p->level == 2)
+	if (i3 > 209)
 	{
-		p->r = 100;
-		p->v = 5 * p->snake->id;
-		p->b = 131;
+		i4 += (i3 - 209);
+		i3 = 209;
+		i2 = 0;
 	}
-	if (p->level == 1)
-	{
-		p->r = 255;
-		p->v = 5 * p->snake->id;
-		p->b = 150;
-	}
+	p->r = 113 + i2 + i4;
+	p->v = 204 - (i * 2);
+	p->b = 46 + i3 - i4;
 }
 
 void		ft_check_snake(int i, int i2, t_env *p)

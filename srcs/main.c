@@ -12,33 +12,33 @@
 
 #include "../includes/snake.h"
 
-void		ft_start_env(t_env **p)
+void		ft_start_env(t_env *p)
 {
 	t_snake *new;
 
-	(*p)->snake = (t_snake *)malloc(sizeof(t_snake));
-	(*p)->wall = (t_wall *)malloc(sizeof(t_wall));
-	(*p)->bonus_x = ft_get_alea();
-	(*p)->bonus_y = ft_get_alea();
-	(*p)->r = 0;
-	(*p)->v = 0;
-	(*p)->b = 0;
-	(*p)->pos_x = 5;
-	(*p)->pos_y = 5;
-	(*p)->snake->pos_x = 5;
-	(*p)->snake->pos_y = 5;
-	(*p)->snake->id = 1;
-	(*p)->snake->dir = 1;
-	(*p)->snake->next = NULL;
-	(*p)->snake->prev = NULL;
-	(*p)->game_over = 0;
-	(*p)->score = 1;
-	(*p)->move = 0;
-	(*p)->wall->x = -1;
-	(*p)->wall->y = -1;
-	(*p)->wall->next = NULL;
-	(*p)->wall->prev = NULL;
-	(*p)->level = 1;
+	p->snake = (t_snake *)malloc(sizeof(t_snake));
+	p->wall = (t_wall *)malloc(sizeof(t_wall));
+	p->bonus_x = ft_get_alea();
+	p->bonus_y = ft_get_alea();
+	p->r = 0;
+	p->v = 0;
+	p->b = 0;
+	p->pos_x = 5;
+	p->pos_y = 5;
+	p->snake->pos_x = SIZE_X / 2;
+	p->snake->pos_y = SIZE_Y / 2;
+	p->snake->id = 1;
+	p->snake->dir = 1;
+	p->snake->next = NULL;
+	p->snake->prev = NULL;
+	p->game_over = 0;
+	p->score = 1;
+	p->move = 0;
+	p->wall->x = -1;
+	p->wall->y = -1;
+	p->wall->next = NULL;
+	p->wall->prev = NULL;
+	p->level = 1;
 }
 
 void	ft_verif(t_env *p)
@@ -146,7 +146,7 @@ void		ft_move(t_env *p)
 	ft_verif_wall(p);
 	if ((p->score % tmp) == 0)
 	{
-		p->wall = ft_add_wall(p);
+		//p->wall = ft_add_wall(p);
 		tmp += 3;
 	}
 	p->move = 0;
@@ -164,7 +164,7 @@ static int	ft_loop_key_hook(t_env *p)
 	time++;
 	if (time > 1000)
 		time = 0;
-	if ((time % (7 - p->level))== 0)
+	if ((time % (7 - p->level))== 0 && p->game_over == 0)
 		ft_move(p);
 	if (p->score % 21 == 0)
 		tmp = 0;
@@ -183,8 +183,40 @@ static int	ft_loop_key_hook(t_env *p)
 	return (0);
 }
 
+void	ft_alonge_snake(t_env *p)
+{
+	int i;
+
+	i = 0;
+	while (i < 3)
+	{
+		ft_add_snake(p, 0 , 0);
+		i++;
+	}
+}
+
+void		ft_restart(t_env *p)
+{
+	p->snake->next = NULL;
+	p->pos_x = 5;
+	p->pos_y = 5;
+	p->snake->pos_x = SIZE_X / 2;
+	p->snake->pos_y = SIZE_Y / 2;
+	p->snake->dir = 1;
+	p->score = 1;
+	p->level = 1;
+	p->move = 0;
+	ft_alonge_snake(p);
+
+}
+
 int			ft_key_hook(int keycode, t_env *p)
 {
+	if (keycode == 36 && p->game_over == 1)
+	{
+		ft_restart(p);
+		p->game_over = 0;
+	}
 	if (keycode == ECHAP)
 		exit(1);
 	if (keycode == UP && p->snake->dir != 2 && p->move == 0)
@@ -212,10 +244,6 @@ int			ft_key_hook(int keycode, t_env *p)
 
 int			ft_mouse_hook(int button, int x, int y, t_env *p)
 {
-	if (button == 1)
-	{
-		p->game_over = 0;
-	}
 	return (0);
 }
 
@@ -264,17 +292,14 @@ t_snake		*ft_add_snake(t_env *p, int x, int y)
 	return (p->snake);
 }
 
-
 int	main(void)
 {
 
 	t_env	*p;
 
 	p = (t_env *)malloc(sizeof(t_env));
-	ft_start_env(&p);
-	ft_add_snake(p, 0 , 0);
-	ft_add_snake(p, 1 , 1);
-	ft_add_snake(p, 2 , 2);
+	ft_start_env(p);
+	ft_alonge_snake(p);
 	p->mlx = mlx_init();
 	p->win = mlx_new_window(p->mlx, WIDTH, HEIGHT, "Snake");
 	p->img = mlx_new_image(p->mlx, WIDTH, HEIGHT);

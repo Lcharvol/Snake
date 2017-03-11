@@ -132,6 +132,7 @@ void		ft_draw_bonus(t_env *p, int e)
 			p->bonus_y = ft_get_alea();
 		}
 		p->snake = ft_add_snake(p, p->bonus_x, p->bonus_y);
+		p->snake = ft_add_snake(p, p->bonus_x, p->bonus_y);
 		p->score += 1;
 	}
 	time++;
@@ -146,6 +147,7 @@ void		ft_draw_bonus(t_env *p, int e)
 		ft_choose_color(p);
 	}
 	ft_draw_square((p->bonus_x * (WIDTH / SIZE_X)) + (e + size + 1), p->bonus_y * (HEIGHT / SIZE_Y) + (e + size + 1), size, p);
+	
 }
 
 void		ft_check_wall(int i, int i2, t_env *p)
@@ -157,18 +159,18 @@ void		ft_check_wall(int i, int i2, t_env *p)
 	{
 		if (p->wall->x == i2 && p->wall->y == i)
 		{
-			p->r = 255;
-			p->v = 5;
-			p->b = 150 +ft_get_alea();
+			p->r = 80;
+			p->v = 80;
+			p->b = 80;
 		}
 		p->wall = p->wall->next;
 
 	}
 	if (p->wall->x == i2 && p->wall->y == i)
 	{
-		p->r = 255;
-		p->v = 5;
-		p->b = 150 +ft_get_alea();
+		p->r = 80;
+		p->v = 80;
+		p->b = 80;
 	}
 	p->wall = tmp;
 }
@@ -219,43 +221,64 @@ void		ft_draw_background(t_env *p)
 
 void		ft_draw_game_over(t_env *p)
 {
-	int n;
-	int r;
-	int		bits_per_pixel;
-	int		size_line;
-	int		endian;
-
-	p->img = mlx_xpm_file_to_image(p->mlx, "gameover2.xpm", &n, &r);
-	p->ret = mlx_get_data_addr(p->img, &(bits_per_pixel),
-		&(size_line), &(endian));
-}
-
-void		ft_draw_score(t_env *p)
-{
+	int		i;
 	char *str;
 
-	str = "Score: ";
-	mlx_string_put(p->mlx, p->win, WIDTH - 130, 10,
-		0x0FFFFFF, str);
-	str = ft_itoa(p->score);
-	mlx_string_put(p->mlx, p->win, WIDTH - 30, 10,
-		0x0FFFFFF, str);
-	str = "Level: ";
-	mlx_string_put(p->mlx, p->win, WIDTH - 130, 30,
-		0x0FFFFFF, str);
-	str = ft_itoa(p->level);
-	mlx_string_put(p->mlx, p->win, WIDTH - 30, 30,
-		0x0FFFFFF, str);
+	i = 0;
+	while (i < (HEIGHT * WIDTH * 4))
+	{
+		(p->ret)[i] = 0;
+		(p->ret)[i + 1] = 0;
+		(p->ret)[i + 2] = 0;
+		(p->ret)[i + 3] = 0;
+		if ((((i - 1) % (WIDTH * 4)) + 4) == 0)
+			i += 4;
+		else
+			i += 8;
+	}
+}
+
+void			ft_draw_score(t_env *p)
+{
+	char 		*str;
+
+	if (p->game_over == 0)
+	{
+		str = "Score: ";
+		mlx_string_put(p->mlx, p->win, WIDTH - 130, 10,
+			0x0FFFFFF, str);
+		str = ft_itoa(p->score);
+		mlx_string_put(p->mlx, p->win, WIDTH - 30, 10,
+			0x0FFFFFF, str);
+		str = "Level: ";
+		mlx_string_put(p->mlx, p->win, WIDTH - 130, 30,
+			0x0FFFFFF, str);
+		str = ft_itoa(p->level);
+		mlx_string_put(p->mlx, p->win, WIDTH - 30, 30,
+			0x0FFFFFF, str);
+	}
+	else
+	{
+		str = "Your scored ";
+		mlx_string_put(p->mlx, p->win, (WIDTH / 2) - 100, (HEIGHT / 2) - 50,
+				0x02ecc71, str);
+		str = ft_itoa(p->score);
+		mlx_string_put(p->mlx, p->win, (WIDTH / 2) + 20, (HEIGHT / 2) - 50,
+				0x02ecc71, str);
+		str = "points";
+		mlx_string_put(p->mlx, p->win, (WIDTH / 2) + 50, (HEIGHT / 2) - 50,
+				0x02ecc71, str);
+		str = "Pres Enter to restart";
+		mlx_string_put(p->mlx, p->win, (WIDTH / 2) - 100, (HEIGHT / 2) - 20,
+				0x02ecc71, str);
+	}
 
 }
 
 void		ft_draw(t_env *p)
 {
-	if (p->game_over == 0)
-	{
-		ft_draw_background(p);
-		ft_draw_map(p);
-	}
+	ft_draw_background(p);
+	ft_draw_map(p);
 	if (p->game_over == 1)
 	{
 		ft_draw_game_over(p);

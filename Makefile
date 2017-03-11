@@ -25,7 +25,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C libft
-	gcc -o $(NAME) $(FLAGS) $(OBJ) -L../includes/mlx/ -lmlx -framework OpenGL -framework AppKit ../libft/libft.a
+	gcc -o $(NAME) $(FLAGS) $(OBJ) -Lincludes/mlx/ -lmlx -framework OpenGL -framework AppKit libft/libft.a
 	echo "Snake done"
 
 clean:
