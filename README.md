@@ -1,5 +1,5 @@
 # Snake_lcharvol-mlx-
-Projet perso snake avec la minilibx
+Projet perso snake avec la minilibx en C
 
                                       ███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗
                                       ██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝
